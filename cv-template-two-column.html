@@ -279,7 +279,7 @@
             padding: 6px 12px;
             border: none;
             border-radius: 6px;
-            color: #2d3436;
+            color: #636e72;
             font-size: 0.9em;
             font-weight: 500;
             cursor: pointer;
@@ -288,7 +288,46 @@
         
         .add-remove-btn:hover {
             background-color: #e9ecef;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+        }
+
+        [contenteditable]:focus {
+            outline: none;
+            border: none; /* Ensure no borders on focus */
+        }
+
+        .editable-item {
+            position: relative; /* For absolute positioning of remove button */
+            margin-bottom: 20px;
+        }
+
+        .remove-btn {
+            display: inline; /* Initially hidden */
+            opacity: 0.4;
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #f8f9fa;
+            color: #636e72;
+            border: none;
+            border-radius: 5px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
+        .editable-item:hover .remove-btn:hover {
+            display: block; /* Show on hover */
+            opacity: 1;
+        }
+
+        .skill {
+            display: inline-block;
+            background-color: #dfe6e9;
+            border-radius: 20px;
+            padding: 5px 15px;
+            margin: 5px;
+            cursor: text;
+            position: relative;
         }
 
         @media print {
@@ -332,105 +371,138 @@
 </head>
 <body>
     <div class="container">
-        <div class="main-content">
-            <header>
-                <h1 class="name" id="name-display" onclick="editField('name')">John Doe</h1>
-                <input type="text" class="input-field" id="name-input" onblur="saveField('name')" placeholder="Enter your name">
-                
-                <div class="title" id="title-display" onclick="editField('title')">Software Engineer</div>
-                <input type="text" class="input-field" id="title-input" onblur="saveField('title')" placeholder="Enter your title">
-                
-                <div class="summary" id="summary-display" onclick="editField('summary')">Experienced software engineer...</div>
-                <textarea class="input-field" id="summary-input" onblur="saveField('summary')" placeholder="Enter summary"></textarea>
-            </header>
+        <header>
+            <h1 class="name" contenteditable="true" oninput="updateField(this, 'name')">Your Name</h1>
+            <div class="title" contenteditable="true" oninput="updateField(this, 'title')">Your Job Title</div>
+            <p class="summary" contenteditable="true" oninput="updateField(this, 'summary')">
+                Brief summary about yourself.
+            </p>
+        </header>
 
-            <section class="section" id="experience-section">
-                <h2>Experience</h2>
-                <div id="experience-list">
-                    <!-- Experience items will be added here dynamically -->
+        <section class="section">
+            <h2>Experience</h2>
+            <div id="experience-container">
+                <div class="editable-item">
+                    <div class="experience-item" contenteditable="true" oninput="updateField(this, 'experience')">
+                        <div class="job-title">Your Job Title</div>
+                        <div class="company">Company Name</div>
+                        <div class="location-date">
+                            <span>Location</span>
+                            <span>Dates</span>
+                        </div>
+                        <div class="description">
+                            Brief description of your responsibilities and achievements.
+                        </div>
+                    <button class="remove-btn" onclick="removeItem(this)">Remove</button>
+                    </div>
                 </div>
-                <button class="add-remove-btn" onclick="addExperience()">Add Experience</button>
-            </section>
-        </div>
+            </div>
+            <button class="add-remove-btn" onclick="addExperience()">Add Experience</button>
+        </section>
 
-        <div class="sidebar">
-            <section class="contact-info">
-                <h2>Contact</h2>
-                <div class="contact-item" id="email-display" onclick="editField('email')">email@example.com</div>
-                <input type="text" class="input-field" id="email-input" onblur="saveField('email')" placeholder="Enter email">
-            </section>
+        <section class="section">
+            <h2>Education</h2>
+            <div id="education-container">
+                <div class="editable-item">
+                    <div class="education-item" contenteditable="true" oninput="updateField(this, 'education')">
+                        <div class="institution">Your Institution</div>
+                        <div class="degree">Degree</div>
+                        <div class="location-date">
+                            <span>Location</span>
+                            <span>Dates</span>
+                        </div>
+                        <div class="description">
+                            Brief description of your education.
+                        </div>
+                        <button class="remove-btn" onclick="removeItem(this)">Remove</button>
+                    </div>
+                </div>
+            </div>
+            <button class="add-remove-btn" onclick="addEducation()">Add Education</button>
+        </section>
 
-            <section class="skills">
-                <h2>Skills</h2>
-                <ul class="skills-list" id="skills-list">
-                    <!-- Skill items will be added here dynamically -->
-                </ul>
-                <button class="add-remove-btn" onclick="addSkill()">Add Skill</button>
-            </section>
-        </div>
+        <section class="section">
+            <h2>Skills</h2>
+            <div id="skills-container">
+                <div class="editable-item">
+                    <div class="skill" contenteditable="true" oninput="updateField(this, 'skill')">Skill Name</div>
+                    <button class="remove-btn" onclick="removeItem(this)">Remove</button>
+                </div>
+            </div>
+            <button class="add-remove-btn" onclick="addSkill()">Add Skill</button>
+        </section>
     </div>
 
     <script>
-        function editField(field) {
-            document.getElementById(`${field}-display`).style.display = "none";
-            const input = document.getElementById(`${field}-input`);
-            input.style.display = "block";
-            input.focus();
-            input.value = document.getElementById(`${field}-display`).innerText;
+        function updateField(element, fieldName) {
+            const content = element.textContent;
+            // Optional: Save the changes to local storage if you want it to persist
+            localStorage.setItem(fieldName, content);
         }
 
-        function saveField(field) {
-            const input = document.getElementById(`${field}-input`);
-            document.getElementById(`${field}-display`).innerText = input.value;
-            input.style.display = "none";
-            document.getElementById(`${field}-display`).style.display = "block";
+        window.onload = function() {
+            document.querySelectorAll('[contenteditable]').forEach(element => {
+                const fieldName = element.getAttribute('oninput').split(',')[1].trim();
+                const savedContent = localStorage.getItem(fieldName);
+                if (savedContent) {
+                    element.textContent = savedContent;
+                }
+            });
         }
 
         function addExperience() {
-            const experienceList = document.getElementById("experience-list");
-            const experienceDiv = document.createElement("div");
-            experienceDiv.className = "experience-item";
-            experienceDiv.innerHTML = `
-                <div class="job-title" onclick="editField('job-title')">Job Title</div>
-                <input type="text" class="input-field" id="job-title-input" onblur="saveField('job-title')" placeholder="Enter job title">
-                
-                <div class="company" onclick="editField('company')">Company</div>
-                <input type="text" class="input-field" id="company-input" onblur="saveField('company')" placeholder="Enter company">
-                
-                <button class="add-remove-btn" onclick="removeItem(this)">Remove</button>
+            const newExperience = document.createElement('div');
+            newExperience.className = 'editable-item';
+            newExperience.innerHTML = `
+                <div class="experience-item" contenteditable="true" oninput="updateField(this, 'experience')">
+                    <div class="job-title">New Job Title</div>
+                    <div class="company">New Company Name</div>
+                    <div class="location-date">
+                        <span>New Location</span>
+                        <span>New Dates</span>
+                    </div>
+                    <div class="description">
+                        Brief description of new responsibilities and achievements.
+                    </div>
+                    <button class="remove-btn" onclick="removeItem(this)">Remove</button>
+                </div>
             `;
-            experienceList.appendChild(experienceDiv);
+            document.getElementById('experience-container').appendChild(newExperience);
+        }
+
+        function addEducation() {
+            const newEducation = document.createElement('div');
+            newEducation.className = 'editable-item';
+            newEducation.innerHTML = `
+                <div class="education-item" contenteditable="true" oninput="updateField(this, 'education')">
+                    <div class="institution">New Institution</div>
+                    <div class="degree">New Degree</div>
+                    <div class="location-date">
+                        <span>New Location</span>
+                        <span>New Dates</span>
+                    </div>
+                    <div class="description">
+                        Brief description of new education.
+                    </div>
+                    <button class="remove-btn" onclick="removeItem(this)">Remove</button>
+                </div>
+            `;
+            document.getElementById('education-container').appendChild(newEducation);
         }
 
         function addSkill() {
-            const skillsList = document.getElementById("skills-list");
-            const skillLi = document.createElement("li");
-            skillLi.className = "skill-item";
-            skillLi.innerHTML = `
-                <span onclick="editSkill(this)">Skill</span>
-                <input type="text" class="input-field" onblur="saveSkill(this)" placeholder="Enter skill">
-                <button class="add-remove-btn" onclick="removeItem(this)">Remove</button>
+            const newSkill = document.createElement('div');
+            newSkill.className = 'editable-item';
+            newSkill.innerHTML = `
+                <div class="skill" contenteditable="true" oninput="updateField(this, 'skill')">New Skill</div>
+                <button class="remove-btn" onclick="removeItem(this)">Remove</button>
             `;
-            skillsList.appendChild(skillLi);
-        }
-
-        function editSkill(skillElement) {
-            const input = skillElement.nextElementSibling;
-            skillElement.style.display = "none";
-            input.style.display = "block";
-            input.focus();
-            input.value = skillElement.innerText;
-        }
-
-        function saveSkill(input) {
-            const skillElement = input.previousElementSibling;
-            skillElement.innerText = input.value;
-            input.style.display = "none";
-            skillElement.style.display = "block";
+            document.getElementById('skills-container').appendChild(newSkill);
         }
 
         function removeItem(button) {
-            button.parentElement.remove();
+            const editableItem = button.parentElement; // Get the parent editable item
+            editableItem.remove(); // Remove it from the DOM
         }
     </script>
 </body>
