@@ -232,6 +232,65 @@
             padding: auto;
         }
 
+        h2 {
+            color: #000000;
+            font-size: 1.2em;
+            margin-bottom: 24px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: #000000;
+            transition: width 0.3s ease-in-out;
+            transform-origin: left;
+        }
+
+        h2:hover::after {
+            width: 100%;
+        }
+
+        .input-field {
+            display: none;
+            margin: 10px 0;
+            padding: 8px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .input-field:focus {
+            outline: none;
+            border: none;
+            background-color: #f8f9fa;
+        }
+
+        .add-remove-btn {
+            background-color: #f8f9fa;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            color: #2d3436;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        
+        .add-remove-btn:hover {
+            background-color: #e9ecef;
+            transform: translateY(-1px);
+        }
+
         @media print {
             body {
                 background-color: white;
@@ -269,103 +328,111 @@
                 font-size: 2.5em;
             }
         }
-
-        h2 {
-            color: #000000;
-            font-size: 1.2em;
-            margin-bottom: 24px;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            display: inline-block;
-            position: relative;
-            cursor: pointer;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background: #000000;
-            transition: width 0.3s ease-in-out;
-            transform-origin: left;
-        }
-
-        h2:hover::after {
-            width: 100%;
-        }
-
     </style>
 </head>
 <body>
     <div class="container">
         <div class="main-content">
             <header>
-                <h1 class="name">{{ name }}</h1>
-                <div class="title">{{ title }}</div>
-                <div class="summary">
-                    {{ summary }}
-                </div>
+                <h1 class="name" id="name-display" onclick="editField('name')">John Doe</h1>
+                <input type="text" class="input-field" id="name-input" onblur="saveField('name')" placeholder="Enter your name">
+                
+                <div class="title" id="title-display" onclick="editField('title')">Software Engineer</div>
+                <input type="text" class="input-field" id="title-input" onblur="saveField('title')" placeholder="Enter your title">
+                
+                <div class="summary" id="summary-display" onclick="editField('summary')">Experienced software engineer...</div>
+                <textarea class="input-field" id="summary-input" onblur="saveField('summary')" placeholder="Enter summary"></textarea>
             </header>
 
-            <section class="section">
+            <section class="section" id="experience-section">
                 <h2>Experience</h2>
-                <div class="experience-item">
-                    <div class="job-title">{{ job_title }}</div>
-                    <div class="company">{{ company }}</div>
-                    <div class="location-date">
-                        <span>{{ location }}</span>
-                        <span>{{ dates }}</span>
-                    </div>
-                    <div class="description">
-                        {{ description}}
-                    </div>
+                <div id="experience-list">
+                    <!-- Experience items will be added here dynamically -->
                 </div>
-            </section>
-
-            <section class="section">
-                <h2>Education</h2>
-                <div class="education-item">
-                    <div class="institution">{{ institution }}</div>
-                    <div class="degree">{{ degree }}</div>
-                    <div class="location-date">
-                        <span>{{ location }}</span>
-                        <span>{{ dates }}</span>
-                    </div>
-                    <div class="description">
-                        {{ description}}
-                    </div>
-                </div>
+                <button class="add-remove-btn" onclick="addExperience()">Add Experience</button>
             </section>
         </div>
 
         <div class="sidebar">
             <section class="contact-info">
                 <h2>Contact</h2>
-                <div class="contact-item">{{ email }}</div>
-                <div class="contact-item">{{ phone }}</div>
-                <div class="contact-item">{{ address }}</div>
+                <div class="contact-item" id="email-display" onclick="editField('email')">email@example.com</div>
+                <input type="text" class="input-field" id="email-input" onblur="saveField('email')" placeholder="Enter email">
             </section>
 
             <section class="skills">
                 <h2>Skills</h2>
-                <ul class="skills-list">
-                    <li class="skill-item">{{ skill }}</li>
+                <ul class="skills-list" id="skills-list">
+                    <!-- Skill items will be added here dynamically -->
                 </ul>
-            </section>
-
-            <section class="languages">
-                <h2>Languages</h2>
-                <div class="language-item">
-                    <span class="language-name">{{ language }}</span>
-                    <span class="language-level">{{ fluency }}</span>
-                </div>
+                <button class="add-remove-btn" onclick="addSkill()">Add Skill</button>
             </section>
         </div>
     </div>
+
+    <script>
+        function editField(field) {
+            document.getElementById(`${field}-display`).style.display = "none";
+            const input = document.getElementById(`${field}-input`);
+            input.style.display = "block";
+            input.focus();
+            input.value = document.getElementById(`${field}-display`).innerText;
+        }
+
+        function saveField(field) {
+            const input = document.getElementById(`${field}-input`);
+            document.getElementById(`${field}-display`).innerText = input.value;
+            input.style.display = "none";
+            document.getElementById(`${field}-display`).style.display = "block";
+        }
+
+        function addExperience() {
+            const experienceList = document.getElementById("experience-list");
+            const experienceDiv = document.createElement("div");
+            experienceDiv.className = "experience-item";
+            experienceDiv.innerHTML = `
+                <div class="job-title" onclick="editField('job-title')">Job Title</div>
+                <input type="text" class="input-field" id="job-title-input" onblur="saveField('job-title')" placeholder="Enter job title">
+                
+                <div class="company" onclick="editField('company')">Company</div>
+                <input type="text" class="input-field" id="company-input" onblur="saveField('company')" placeholder="Enter company">
+                
+                <button class="add-remove-btn" onclick="removeItem(this)">Remove</button>
+            `;
+            experienceList.appendChild(experienceDiv);
+        }
+
+        function addSkill() {
+            const skillsList = document.getElementById("skills-list");
+            const skillLi = document.createElement("li");
+            skillLi.className = "skill-item";
+            skillLi.innerHTML = `
+                <span onclick="editSkill(this)">Skill</span>
+                <input type="text" class="input-field" onblur="saveSkill(this)" placeholder="Enter skill">
+                <button class="add-remove-btn" onclick="removeItem(this)">Remove</button>
+            `;
+            skillsList.appendChild(skillLi);
+        }
+
+        function editSkill(skillElement) {
+            const input = skillElement.nextElementSibling;
+            skillElement.style.display = "none";
+            input.style.display = "block";
+            input.focus();
+            input.value = skillElement.innerText;
+        }
+
+        function saveSkill(input) {
+            const skillElement = input.previousElementSibling;
+            skillElement.innerText = input.value;
+            input.style.display = "none";
+            skillElement.style.display = "block";
+        }
+
+        function removeItem(button) {
+            button.parentElement.remove();
+        }
+    </script>
 </body>
 <footer>
     <div class="sm-container">
