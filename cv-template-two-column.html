@@ -96,6 +96,7 @@
 
         .section {
             margin-bottom: 40px;
+            padding: 0 20px;
         }
 
         h2 {
@@ -117,7 +118,7 @@
             transform: translateX(4px);
         }
 
-        .job-title, .institution {
+        .job-title, .contact-name, .institution {
             font-weight: 600;
             color: #1a1a1a;
             margin-bottom: 4px;
@@ -150,12 +151,19 @@
         }
 
         .contact-item {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             color: #2d3436;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 30px;
             font-size: 0.95em;
+        }
+
+        .contact-item div[contenteditable="true"] {
+            padding: 5px;
+            border: 1px solid #ddd;
+            min-width: 100px;
+            margin-bottom: 20px;
         }
 
         .skills-list {
@@ -169,7 +177,7 @@
         .skill-item {
             background: #f8f9fa;
             padding: 8px 16px;
-            border-radius: 6px;
+            border-radius: 12px;
             color: #2d3436;
             font-size: 0.9em;
             font-weight: 500;
@@ -274,7 +282,7 @@
             background-color: #f8f9fa;
         }
 
-        .add-remove-btn {
+        .add-btn {
             background-color: #f8f9fa;
             padding: 6px 12px;
             border: none;
@@ -286,7 +294,7 @@
             transition: background 0.2s ease, transform 0.2s ease;
         }
         
-        .add-remove-btn:hover {
+        .add-btn:hover {
             background-color: #e9ecef;
             transform: translateY(-2px);
         }
@@ -302,7 +310,7 @@
         }
 
         .remove-btn {
-            display: inline; /* Initially hidden */
+            display: none; /* Initially hidden */
             opacity: 0.4;
             position: absolute;
             top: 0;
@@ -315,8 +323,27 @@
             cursor: pointer;
         }
 
-        .editable-item:hover .remove-btn:hover {
-            display: block; /* Show on hover */
+        .remove-btn-skill {
+            display: none; /* Initially hidden */
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #f8f9fa;
+            color: #636e72;
+            border: none;
+            border-radius: 100%;
+            padding: 4px;
+            font-size: 0.5em;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .skill-item:hover .remove-btn-skill {
+            display: inline; /* Show on hover */
+        }
+
+        .editable-item:hover .remove-btn{
+            display: inline; /* Show on hover */
             opacity: 1;
         }
 
@@ -328,6 +355,11 @@
             margin: 5px;
             cursor: text;
             position: relative;
+        }
+
+        .dragging {
+            opacity: 0.6;
+            border: 2px dashed #0984e3;
         }
 
         @media print {
@@ -344,7 +376,16 @@
             }
             .skill-item:hover {
                 transform: none;
-                background: #f8f9fa;
+                background: #e9ecef;
+            }
+            .remove-btn {
+                display: none;
+            }
+            .remove-btn-skill {
+                display: none;
+            }
+            .add-btn {
+                display: none;
             }
         }
 
@@ -371,66 +412,88 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1 class="name" contenteditable="true" oninput="updateField(this, 'name')">Your Name</h1>
-            <div class="title" contenteditable="true" oninput="updateField(this, 'title')">Your Job Title</div>
-            <p class="summary" contenteditable="true" oninput="updateField(this, 'summary')">
-                Brief summary about yourself.
-            </p>
-        </header>
+        <div class="main-content">
+            <header>
+                <h1 class="name" contenteditable="true" oninput="updateField(this, 'name')">Your Name</h1>
+                <div class="title" contenteditable="true" oninput="updateField(this, 'title')">Your Job Title</div>
+                <p class="summary" contenteditable="true" oninput="updateField(this, 'summary')">
+                    Brief summary about yourself.
+                </p>
+            </header>
 
-        <section class="section">
-            <h2>Experience</h2>
-            <div id="experience-container">
-                <div class="editable-item">
-                    <div class="experience-item" contenteditable="true" oninput="updateField(this, 'experience')">
-                        <div class="job-title">Your Job Title</div>
-                        <div class="company">Company Name</div>
-                        <div class="location-date">
-                            <span>Location</span>
-                            <span>Dates</span>
-                        </div>
-                        <div class="description">
-                            Brief description of your responsibilities and achievements.
-                        </div>
-                    <button class="remove-btn" onclick="removeItem(this)">Remove</button>
-                    </div>
-                </div>
-            </div>
-            <button class="add-remove-btn" onclick="addExperience()">Add Experience</button>
-        </section>
-
-        <section class="section">
-            <h2>Education</h2>
-            <div id="education-container">
-                <div class="editable-item">
-                    <div class="education-item" contenteditable="true" oninput="updateField(this, 'education')">
-                        <div class="institution">Your Institution</div>
-                        <div class="degree">Degree</div>
-                        <div class="location-date">
-                            <span>Location</span>
-                            <span>Dates</span>
-                        </div>
-                        <div class="description">
-                            Brief description of your education.
-                        </div>
+            <section id="experience-section" class="section" draggable="true">
+                <h2>Experience</h2>
+                <div id="experience-container">
+                    <div class="editable-item">
+                        <div class="experience-item" contenteditable="true" oninput="updateField(this, 'experience')">
+                            <div class="job-title">Your Job Title</div>
+                            <div class="company">Company Name</div>
+                            <div class="location-date">
+                                <span>Location</span>
+                                <span>Dates</span>
+                            </div>
+                            <div class="description">
+                                Brief description of your responsibilities and achievements.
+                            </div>
                         <button class="remove-btn" onclick="removeItem(this)">Remove</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <button class="add-remove-btn" onclick="addEducation()">Add Education</button>
-        </section>
+                <button class="add-btn" onclick="addExperience()">Add Experience</button>
+            </section>
 
-        <section class="section">
-            <h2>Skills</h2>
-            <div id="skills-container">
-                <div class="editable-item">
-                    <div class="skill" contenteditable="true" oninput="updateField(this, 'skill')">Skill Name</div>
-                    <button class="remove-btn" onclick="removeItem(this)">Remove</button>
+            <section id="education-section" class="section" draggable="true">
+                <h2>Education</h2>
+                <div id="education-container">
+                    <div class="editable-item">
+                        <div class="education-item" contenteditable="true" oninput="updateField(this, 'education')">
+                            <div class="institution">Your Institution</div>
+                            <div class="degree">Degree</div>
+                            <div class="location-date">
+                                <span>Location</span>
+                                <span>Dates</span>
+                            </div>
+                            <div class="description">
+                                Brief description of your education.
+                            </div>
+                            <button class="remove-btn" onclick="removeItem(this)">Remove</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <button class="add-remove-btn" onclick="addSkill()">Add Skill</button>
-        </section>
+                <button class="add-btn" onclick="addEducation()">Add Education</button>
+            </section>
+        </div>
+
+        <div class="sidebar">
+            <section id="contact-section" class="section contact-info"  draggable="true">
+                <h2>Contact</h2>
+                <div id="contact-items">
+                    <!-- Dynamically added contact items will go here -->
+                </div>
+                <button class="add-btn" onclick="addContactItem()">Add Contact Item</button>
+            </section>
+
+            <section id="skills-section" class="section skills"  draggable="true">
+                <h2>Skills</h2>
+                <div id="skills-container">
+                    <ul class="skills-list">
+                        <li class="skill-item editable-item">
+                            <p contenteditable="true" oninput="updateField(this, 'skill')">Skill Name</p>
+                            <button class="remove-btn-skill" onclick="removeItem(this)">X</button>
+                        </li>
+                    </ul>
+                </div>
+                <button class="add-btn" onclick="addSkill()">Add Skill</button>
+            </section>
+
+            <section id="languages-section" class="section languages"  draggable="true">
+                <h2>Languages</h2>
+                <div id="language-items">
+                    <!-- Dynamically added language items will go here -->
+                </div>
+                <button class="add-btn" onclick="addLanguageItem()">Add Language</button>
+            </section>
+        </div>
     </div>
 
     <script>
@@ -491,24 +554,80 @@
         }
 
         function addSkill() {
-            const newSkill = document.createElement('div');
-            newSkill.className = 'editable-item';
+            const newSkill = document.createElement('li');
+            newSkill.className = 'skill-item editable-item';
             newSkill.innerHTML = `
-                <div class="skill" contenteditable="true" oninput="updateField(this, 'skill')">New Skill</div>
-                <button class="remove-btn" onclick="removeItem(this)">Remove</button>
+                <p contenteditable="true" oninput="updateField(this, 'skill')">Skill Name</p>
+                <button class="remove-btn-skill" onclick="removeItem(this)">X</button>
             `;
-            document.getElementById('skills-container').appendChild(newSkill);
+            document.querySelector('.skills-list').appendChild(newSkill);
         }
+
 
         function removeItem(button) {
             const editableItem = button.parentElement; // Get the parent editable item
             editableItem.remove(); // Remove it from the DOM
         }
+
+        // Enable dragging of sections
+        document.querySelectorAll('.section').forEach(section => {
+            section.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', e.target.id); // Set the dragged section's id
+                e.target.classList.add('dragging'); // Optional: Add a visual effect
+            });
+
+            section.addEventListener('dragover', (e) => {
+                e.preventDefault(); // Required to allow dropping
+            });
+
+            section.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const draggedSectionId = e.dataTransfer.getData('text/plain');
+                const draggedSection = document.getElementById(draggedSectionId);
+                
+                if (e.target.classList.contains('section') && e.target !== draggedSection) {
+                    // Insert dragged section before the section being hovered over
+                    e.target.parentNode.insertBefore(draggedSection, e.target.nextSibling);
+                }
+            });
+
+            section.addEventListener('dragend', (e) => {
+                e.target.classList.remove('dragging'); // Remove the visual effect
+            });
+        });
+
+    // Function to create and append a new contact item
+    function addContactItem() {
+        const contactItems = document.getElementById('contact-items');
+        const item = document.createElement('div');
+        item.classList.add(['contact-item', 'editable-item']);
+        item.innerHTML = `
+            <div class="contact-name" contenteditable="true" oninput="updateField(this, 'contact')">Contact Item</div>
+            <div contenteditable="true" oninput="updateField(this, 'contactdesc')">Contact Value</div>
+            <button class="remove-btn" onclick="removeItem(this)">Remove</button>
+        `;
+        contactItems.appendChild(item);
+    }
+
+    // Function to create and append a new language item
+    function addLanguageItem() {
+        const languageItems = document.getElementById('language-items');
+        const item = document.createElement('div');
+        item.classList.add('language-item');
+
+        item.innerHTML = `
+            <input type="text" placeholder="Language" class="language-name" />
+            <input type="text" placeholder="Fluency Level" class="language-fluency" />
+            <button onclick="removeItem(this)">Remove</button>
+        `;
+
+        languageItems.appendChild(item);
+    }
     </script>
 </body>
 <footer>
-    <div class="sm-container">
+    <!-- <div class="sm-container">
         <span class="footer-text">Updated on {{ date }}</span>
-    </div>
+    </div> -->
 </footer>
 </html>
