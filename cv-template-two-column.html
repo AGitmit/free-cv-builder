@@ -118,10 +118,24 @@
             transform: translateX(4px);
         }
 
-        .job-title, .contact-name, .institution {
+        .job-title, .institution {
             font-weight: 600;
             color: #1a1a1a;
             margin-bottom: 4px;
+            font-size: 1.1em;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+            font-size: 1.1em;
+        }
+
+        .contact-value {    
+            font-weight: 400;
+            color: #1a1a1a;
+            margin-bottom: 20px;
             font-size: 1.1em;
         }
 
@@ -150,8 +164,8 @@
             margin-bottom: 40px;
         }
 
-        .contact-item {
-            margin-bottom: 20px;
+        .contact-item .language-item{
+            margin-bottom: 60px;
             color: #2d3436;
             display: flex;
             align-items: center;
@@ -163,7 +177,7 @@
             padding: 5px;
             border: 1px solid #ddd;
             min-width: 100px;
-            margin-bottom: 20px;
+            /* margin-bottom: 20px; */
         }
 
         .skills-list {
@@ -193,12 +207,12 @@
             margin-top: 40px;
         }
 
-        .language-item {
+        /* .language-item {
             margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
+        } */
 
         .language-name {
             font-weight: 500;
@@ -336,6 +350,19 @@
             font-size: 0.5em;
             font-weight: 600;
             cursor: pointer;
+        }
+
+        .contact-item .remove-btn {
+            display: inline;
+            position: absolute;
+            right: 10px;
+            background-color: #f8f9fa;
+            border: none;
+            color: #636e72;
+            font-weight: 400;
+            opacity: 1;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
         }
 
         .skill-item:hover .remove-btn-skill {
@@ -600,10 +627,10 @@
     function addContactItem() {
         const contactItems = document.getElementById('contact-items');
         const item = document.createElement('div');
-        item.classList.add(['contact-item', 'editable-item']);
+        item.classList.add(['editable-item', 'contact-item']);
         item.innerHTML = `
             <div class="contact-name" contenteditable="true" oninput="updateField(this, 'contact')">Contact Item</div>
-            <div contenteditable="true" oninput="updateField(this, 'contactdesc')">Contact Value</div>
+            <div class="contact-value" contenteditable="true" oninput="updateField(this, 'contactdesc')">Contact Value</div>
             <button class="remove-btn" onclick="removeItem(this)">Remove</button>
         `;
         contactItems.appendChild(item);
@@ -613,11 +640,11 @@
     function addLanguageItem() {
         const languageItems = document.getElementById('language-items');
         const item = document.createElement('div');
-        item.classList.add('language-item');
+        item.classList.add(['editable-item', 'language-item']);
 
         item.innerHTML = `
-            <input type="text" placeholder="Language" class="language-name" />
-            <input type="text" placeholder="Fluency Level" class="language-fluency" />
+            <div class="contact-name" contenteditable="true" oninput="updateField(this, 'language')">Language</div>
+            <span class="contact-value" contenteditable="true" oninput="updateField(this, 'fluency')">Fluency</div>
             <button onclick="removeItem(this)">Remove</button>
         `;
 
