@@ -23,7 +23,7 @@ To use this template directly in your browser:
 1. **Clone or Download the Template**:
    - Clone this repository using:
      ```bash
-     git clone https://github.com/agitmit/cv-builder.git
+     git clone https://github.com/AGitmit/free-cv-builder.git
      ```
    - Or download as a ZIP file and extract.
 
