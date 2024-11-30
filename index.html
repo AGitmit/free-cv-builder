@@ -16,12 +16,6 @@
                 <p class="summary" contenteditable="true" oninput="updateField(this, &#39;summary&#39;)">Brief summary about yourself.</p><div>
             </div></header>
 
-            <section id="contact-section" class="section" draggable="true">
-                <h2>Contact</h2>
-                <div id="contact-container"></div>
-                <button class="add-btn" onclick="addContact()">Add Contact</button>
-            </section>
-
             <section id="experience-section" class="section" draggable="true">
                 <h2>Experience</h2>
                 <div id="experience-container"></div>
@@ -37,7 +31,11 @@
         </div>
 
         <div class="sidebar">
-            
+            <section id="contact-section" class="section" draggable="true">
+                <h2>Contact</h2>
+                <div id="contact-container"></div>
+                <button class="add-btn" onclick="addContact()">Add Contact</button>
+            </section>
 
             <section id="skills-section" class="section skills" draggable="true">
                 <h2>Skills</h2>
