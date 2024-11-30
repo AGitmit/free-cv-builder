@@ -352,19 +352,6 @@
             cursor: pointer;
         }
 
-        .contact-item .remove-btn {
-            display: inline;
-            position: absolute;
-            right: 10px;
-            background-color: #f8f9fa;
-            border: none;
-            color: #636e72;
-            font-weight: 400;
-            opacity: 1;
-            cursor: pointer;
-            transition: opacity 0.3s ease;
-        }
-
         .skill-item:hover .remove-btn-skill {
             display: inline; /* Show on hover */
         }
@@ -509,7 +496,7 @@
         function addContact() {
             const contactItems = document.getElementById('contact-container');
             const item = document.createElement('div');
-            item.classList.add(['editable-item', 'contact-item']);
+            item.classList.add(['editable-item']);
             item.innerHTML = `
                 <div class="contact-item" contenteditable="true" oninput="updateField(this, 'contact')">
                     <div class="contact-name">New Contact Item</div>
