@@ -1,6 +1,5 @@
 function updateField(element, fieldName) {
     const content = element.textContent;
-    // Optional: Save the changes to local storage if you want it to persist
     localStorage.setItem(fieldName, content);
 }
 
